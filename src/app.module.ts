@@ -5,6 +5,7 @@ import { BoardsModule } from './task-management/boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Board } from './task-management/boards/entities/board.entity';
 import { Status } from './task-management/boards/entities/status.entity';
+import { TasksModule } from './task-management/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { Status } from './task-management/boards/entities/status.entity';
       synchronize: true,
     }),
     BoardsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

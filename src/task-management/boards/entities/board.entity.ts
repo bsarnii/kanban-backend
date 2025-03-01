@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Status } from './status.entity';
+import { Task } from 'src/task-management/tasks/entities/task.entity';
 
 @Entity()
 export class Board {
@@ -14,4 +15,7 @@ export class Board {
     eager: true,
   })
   statuses: Status[];
+
+  @OneToMany(() => Task, (task) => task.board)
+  tasks: Task[];
 }
