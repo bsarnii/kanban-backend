@@ -14,7 +14,7 @@ export class TaskResponseDto {
   subtasks: Subtask[]; // Directly include subtasks
 
   @Expose()
-  @Transform(({ obj }: { obj: Task }) => obj.board.id)
+  @Transform(({ obj }: { obj: Task }) => obj.board?.id)
   boardId: string;
 
   @Expose()

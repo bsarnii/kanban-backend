@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subtask } from './entities/subtask.entity';
 import { Task } from './entities/task.entity';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { Board } from '../boards/entities/board.entity';
 import { Status } from '../boards/entities/status.entity';
 import { plainToInstance } from 'class-transformer';
@@ -64,6 +64,24 @@ export class TasksService {
 
     // Transform entity into DTO before returning
     return plainToInstance(TaskResponseDto, savedTask);
+  }
+
+  async findAllAfterBoardId(boardId: string): Promise<TaskResponseDto[]> {
+    // 🔹 Check if board exists
+    const boardExists = await this.boardRepository.findOneBy({
+      id: Equal(boardId),
+    });
+    if (!boardExists) {
+      throw new NotFoundException(`Board with ID ${boardId} not found.`);
+    }
+
+    const tasks = await this.taskRepository.find({
+      where: { board: { id: boardId } },
+    });
+    console.log(tasks);
+
+    // Transform entities into DTOs before returning
+    return plainToInstance(TaskResponseDto, tasks);
   }
   /*
 

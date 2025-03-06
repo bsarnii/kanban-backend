@@ -10,14 +10,22 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskResponseDto } from './dto/task-response.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
+    return await this.tasksService.create(createTaskDto);
+  }
+
+  @Get()
+  async findAllAfterBoardId(
+    @Body() { boardId }: { boardId: string },
+  ): Promise<TaskResponseDto[]> {
+    return await this.tasksService.findAllAfterBoardId(boardId);
   }
   /*
   @Get()
