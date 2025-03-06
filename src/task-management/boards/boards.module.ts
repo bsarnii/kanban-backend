@@ -7,6 +7,7 @@ import { BoardsController } from './boards.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Board, Status])], // Include both entities
+  exports: [TypeOrmModule],
   controllers: [BoardsController],
   providers: [BoardsService],
 })

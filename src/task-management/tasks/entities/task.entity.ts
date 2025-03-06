@@ -2,6 +2,7 @@ import { Board } from 'src/task-management/boards/entities/board.entity';
 import { Status } from 'src/task-management/boards/entities/status.entity';
 import {
   Column,
+  Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { Subtask } from './subtask.entity';
 
+@Entity()
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,9 +25,9 @@ export class Task {
   @JoinColumn({ name: 'boardId' }) // Explicitly defines the foreign key column
   board: Board;
 
-  @ManyToOne(() => Status, (status) => status.tasks)
+  @ManyToOne(() => Status, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'statusId' }) // Explicitly defines the foreign key column
-  status: Status;
+  status?: Status;
 
   @OneToMany(() => Subtask, (subtask) => subtask.task, {
     cascade: true,

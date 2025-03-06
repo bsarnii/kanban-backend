@@ -1,6 +1,13 @@
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Task } from './task.entity';
 
+@Entity()
 export class Subtask {
   @PrimaryGeneratedColumn('uuid')
   id: string;

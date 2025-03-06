@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Board } from './task-management/boards/entities/board.entity';
 import { Status } from './task-management/boards/entities/status.entity';
 import { TasksModule } from './task-management/tasks/tasks.module';
+import { Task } from './task-management/tasks/entities/task.entity';
+import { Subtask } from './task-management/tasks/entities/subtask.entity';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { TasksModule } from './task-management/tasks/tasks.module';
       username: 'root',
       password: 'root',
       database: 'kanban',
-      entities: [Board, Status],
+      entities: [Board, Status, Task, Subtask],
       synchronize: true,
     }),
     BoardsModule,
