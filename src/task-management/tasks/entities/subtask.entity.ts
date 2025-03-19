@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Task } from './task.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Subtask {
@@ -18,6 +19,7 @@ export class Subtask {
   @Column()
   completed: boolean;
 
+  @Exclude()
   @ManyToOne(() => Task, (task) => task.subtasks, { onDelete: 'CASCADE' }) // Ensures subtasks are deleted if task is deleted
   @JoinColumn({ name: 'taskId' }) // Explicitly defines the foreign key column
   task: Task;

@@ -8,6 +8,7 @@ import { Board } from '../boards/entities/board.entity';
 import { Status } from '../boards/entities/status.entity';
 import { plainToInstance } from 'class-transformer';
 import { TaskResponseDto } from './dto/task-response.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -78,27 +79,100 @@ export class TasksService {
     const tasks = await this.taskRepository.find({
       where: { board: { id: boardId } },
     });
-    console.log(tasks);
 
     // Transform entities into DTOs before returning
     return plainToInstance(TaskResponseDto, tasks);
   }
-  /*
 
-  findAll() {
-    return `This action returns all tasks`;
+  async update(
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<TaskResponseDto> {
+    const { name, description, statusId, subtasks } = updateTaskDto;
+
+    // 🔹 Load the task with its current subtasks
+    const task = await this.taskRepository.findOne({
+      where: { id },
+      relations: ['subtasks'],
+    });
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found.`);
+    }
+
+    // 🔹 If statusId is provided, check if that status exists and update the task's status
+    if (statusId) {
+      const statusExists = await this.statusRepository.findOne({
+        where: { id: statusId },
+      });
+      if (!statusExists) {
+        throw new NotFoundException(`Status with ID ${statusId} not found.`);
+      }
+      task.status = statusExists;
+    }
+
+    // 🔹 Update basic task fields if provided
+    if (name !== undefined) task.name = name;
+    if (description !== undefined) task.description = description;
+
+    // 🔹 Process subtasks:
+    // For each subtask in the update DTO, update existing or create new.
+    const updatedSubtasks = await Promise.all(
+      subtasks.map(async (subtaskDto) => {
+        if ('id' in subtaskDto && subtaskDto.id) {
+          // Update existing subtask
+          await this.subtaskRepository.update(subtaskDto.id, {
+            name: subtaskDto.name,
+            completed: subtaskDto.completed,
+          });
+          return await this.subtaskRepository.findOne({
+            where: { id: subtaskDto.id },
+          });
+        } else {
+          // Create new subtask and associate it with the task
+          const newSubtask = this.subtaskRepository.create({
+            name: subtaskDto.name,
+            completed: subtaskDto.completed,
+            task, // link the new subtask with the task
+          });
+          return await this.subtaskRepository.save(newSubtask);
+        }
+      }),
+    );
+
+    // 🔹 Identify and remove orphaned subtasks:
+    // Build an array of subtask IDs from the update DTO (for those subtasks that have an id)
+    const updatedSubtaskIds = subtasks
+      .filter((dto) => 'id' in dto && dto.id)
+      .map((dto) => {
+        if ('id' in dto) {
+          return dto.id;
+        }
+        return null;
+      })
+      .filter((id): id is string => id !== null);
+
+    // Any subtask in the task that is not in updatedSubtaskIds should be removed.
+    const subtasksToRemove = task.subtasks.filter(
+      (existingSubtask) => !updatedSubtaskIds.includes(existingSubtask.id),
+    );
+
+    if (subtasksToRemove.length > 0) {
+      await this.subtaskRepository.remove(subtasksToRemove);
+    }
+
+    // 🔹 Update the task's subtasks with the newly updated/created subtasks.
+    task.subtasks = updatedSubtasks.filter(
+      (subtask): subtask is Subtask => subtask !== null,
+    );
+
+    // 🔹 Save the updated task.
+    const savedTask = await this.taskRepository.save(task);
+
+    // 🔹 Transform the saved task into the response DTO.
+    return plainToInstance(TaskResponseDto, savedTask);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async remove(id: string) {
+    return await this.taskRepository.delete(id);
   }
-
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} task`;
-  }
-    */
 }
