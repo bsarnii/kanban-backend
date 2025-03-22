@@ -12,28 +12,28 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
 
-@Controller('tasks')
+@Controller()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post()
+  @Post('tasks')
   async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     return await this.tasksService.create(createTaskDto);
   }
 
-  @Get()
+  @Get('board/:boardId/tasks')
   async findAllAfterBoardId(
-    @Body() { boardId }: { boardId: string },
+    @Param('boardId') boardId: string,
   ): Promise<TaskResponseDto[]> {
     return await this.tasksService.findAllAfterBoardId(boardId);
   }
 
-  @Patch(':id')
+  @Patch('tasks/:id')
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return await this.tasksService.update(id, updateTaskDto);
   }
 
-  @Delete(':id')
+  @Delete('tasks/:id')
   async remove(@Param('id') id: string) {
     return await this.tasksService.remove(id);
   }
