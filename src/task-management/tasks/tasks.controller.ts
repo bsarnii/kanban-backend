@@ -21,7 +21,7 @@ export class TasksController {
     return await this.tasksService.create(createTaskDto);
   }
 
-  @Get('board/:boardId/tasks')
+  @Get('boards/:boardId/tasks')
   async findAllAfterBoardId(
     @Param('boardId') boardId: string,
   ): Promise<TaskResponseDto[]> {
