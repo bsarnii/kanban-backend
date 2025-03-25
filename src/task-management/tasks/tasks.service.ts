@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subtask } from './entities/subtask.entity';
 import { Task } from './entities/task.entity';
-import { Equal, Repository } from 'typeorm';
+import { Equal, In, Repository } from 'typeorm';
 import { Board } from '../boards/entities/board.entity';
 import { Status } from '../boards/entities/status.entity';
 import { plainToInstance } from 'class-transformer';
@@ -37,6 +41,12 @@ export class TasksService {
       throw new NotFoundException(`Board with ID ${boardId} not found.`);
     }
 
+    const lastTask = await this.taskRepository.findOne({
+      where: { board: { id: boardId } },
+      order: { orderIndex: 'DESC' },
+    });
+    const orderIndex = lastTask ? lastTask.orderIndex + 1 : 1;
+
     // 🔹 Check if status exists
     const statusExists = await this.statusRepository.findOne({
       where: { id: statusId },
@@ -59,6 +69,7 @@ export class TasksService {
       board: { id: boardId }, // Only assign the board ID, not the full entity
       status: { id: statusId }, // Only assign the status ID
       subtasks: subtaskEntities,
+      orderIndex,
     });
 
     const savedTask = await this.taskRepository.save(task);
@@ -81,7 +92,8 @@ export class TasksService {
     });
 
     // Transform entities into DTOs before returning
-    return plainToInstance(TaskResponseDto, tasks);
+    const sortedTasks = tasks.sort((a, b) => a.orderIndex - b.orderIndex);
+    return plainToInstance(TaskResponseDto, sortedTasks);
   }
 
   async update(
@@ -174,5 +186,29 @@ export class TasksService {
 
   async remove(id: string) {
     return await this.taskRepository.delete(id);
+  }
+
+  async sortTasks(taskIds: string[]): Promise<TaskResponseDto[]> {
+    //return new Promise(() => [] as TaskResponseDto[]);
+    const tasks = await this.taskRepository.find({
+      where: { id: In(taskIds) },
+    });
+
+    if (tasks.length !== taskIds.length) {
+      throw new BadRequestException('Some tasks were not found');
+    }
+
+    // Update the orderIndex based on the order in taskIds array
+    for (let i = 0; i < taskIds.length; i++) {
+      const task = tasks.find((t) => t.id === taskIds[i]);
+      if (task) {
+        task.orderIndex = i + 1; // 1-based index (or just use `i` for 0-based)
+      }
+    }
+
+    await this.taskRepository.save(tasks);
+
+    const sortedTasks = tasks.sort((a, b) => a.orderIndex - b.orderIndex);
+    return plainToInstance(TaskResponseDto, sortedTasks);
   }
 }

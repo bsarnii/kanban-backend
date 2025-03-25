@@ -37,4 +37,9 @@ export class TasksController {
   async remove(@Param('id') id: string) {
     return await this.tasksService.remove(id);
   }
+
+  @Post('tasks/sort')
+  async sortTasks(@Body() taskIds: string[]): Promise<TaskResponseDto[]> {
+    return await this.tasksService.sortTasks(taskIds);
+  }
 }
