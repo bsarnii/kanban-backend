@@ -41,4 +41,7 @@ export class Task {
     eager: true,
   })
   subtasks: Subtask[];
+
+  @Column()
+  orderIndex: number;
 }

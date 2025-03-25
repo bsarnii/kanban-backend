@@ -26,4 +26,7 @@ export class TaskResponseDto {
 
   @Exclude()
   status: Status;
+
+  @Exclude()
+  orderIndex: number;
 }
