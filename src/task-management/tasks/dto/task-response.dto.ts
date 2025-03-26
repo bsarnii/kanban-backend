@@ -11,7 +11,14 @@ export class TaskResponseDto {
 
   description: string;
 
-  subtasks: Subtask[]; // Directly include subtasks
+  @Transform(
+    ({ obj }: { obj: Task }) =>
+      obj.subtasks?.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      ) || [],
+  )
+  subtasks: Subtask[];
 
   @Expose()
   @Transform(({ obj }: { obj: Task }) => obj.board?.id)

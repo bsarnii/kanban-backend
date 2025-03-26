@@ -2,6 +2,7 @@ import { Board } from 'src/task-management/boards/entities/board.entity';
 import { Status } from 'src/task-management/boards/entities/status.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -44,4 +45,7 @@ export class Task {
 
   @Column()
   orderIndex: number;
+
+  @CreateDateColumn()
+  public createdAt: Date;
 }

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -18,6 +19,9 @@ export class Subtask {
 
   @Column()
   completed: boolean;
+
+  @CreateDateColumn()
+  public createdAt: Date;
 
   @Exclude()
   @ManyToOne(() => Task, (task) => task.subtasks, { onDelete: 'CASCADE' }) // Ensures subtasks are deleted if task is deleted
