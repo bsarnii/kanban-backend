@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
 import { Status } from './status.entity';
 import { Task } from 'src/task-management/tasks/entities/task.entity';
 
@@ -9,6 +10,9 @@ export class Board {
 
   @Column()
   name: string;
+
+  @CreateDateColumn()
+  public createdAt: Date;
 
   @OneToMany(() => Status, (status) => status.board, {
     cascade: true,

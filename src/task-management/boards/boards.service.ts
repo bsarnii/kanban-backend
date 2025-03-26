@@ -28,11 +28,16 @@ export class BoardsService {
   }
 
   async findAll() {
-    return await this.boardRepository.find();
+    return await this.boardRepository.find({
+      order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
+    });
   }
 
   async findOne(id: string) {
-    return await this.boardRepository.findOneBy({ id });
+    return await this.boardRepository.findOne({
+      where: { id },
+      order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
+    });
   }
 
   async update(id: string, updateBoardDto: UpdateBoardDto): Promise<Board> {
@@ -41,6 +46,7 @@ export class BoardsService {
     // 1️⃣ Fetch the board with existing statuses
     const board = await this.boardRepository.findOne({
       where: { id },
+      order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
     });
 
     if (!board) {
@@ -96,6 +102,7 @@ export class BoardsService {
     // 7️⃣ Return updated board with statuses
     return await (this.boardRepository.findOne({
       where: { id: board.id },
+      order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
     }) as Promise<Board>);
   }
 
