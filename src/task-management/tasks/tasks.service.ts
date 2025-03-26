@@ -126,56 +126,58 @@ export class TasksService {
     if (name !== undefined) task.name = name;
     if (description !== undefined) task.description = description;
 
-    // 🔹 Process subtasks:
-    // For each subtask in the update DTO, update existing or create new.
-    const updatedSubtasks = await Promise.all(
-      subtasks.map(async (subtaskDto) => {
-        if ('id' in subtaskDto && subtaskDto.id) {
-          // Update existing subtask
-          await this.subtaskRepository.update(subtaskDto.id, {
-            name: subtaskDto.name,
-            completed: subtaskDto.completed,
-          });
-          return await this.subtaskRepository.findOne({
-            where: { id: subtaskDto.id },
-          });
-        } else {
-          // Create new subtask and associate it with the task
-          const newSubtask = this.subtaskRepository.create({
-            name: subtaskDto.name,
-            completed: subtaskDto.completed,
-            task, // link the new subtask with the task
-          });
-          return await this.subtaskRepository.save(newSubtask);
-        }
-      }),
-    );
+    if (subtasks) {
+      // 🔹 Process subtasks:
+      // For each subtask in the update DTO, update existing or create new.
+      const updatedSubtasks = await Promise.all(
+        subtasks.map(async (subtaskDto) => {
+          if ('id' in subtaskDto && subtaskDto.id) {
+            // Update existing subtask
+            await this.subtaskRepository.update(subtaskDto.id, {
+              name: subtaskDto.name,
+              completed: subtaskDto.completed,
+            });
+            return await this.subtaskRepository.findOne({
+              where: { id: subtaskDto.id },
+            });
+          } else {
+            // Create new subtask and associate it with the task
+            const newSubtask = this.subtaskRepository.create({
+              name: subtaskDto.name,
+              completed: subtaskDto.completed,
+              task, // link the new subtask with the task
+            });
+            return await this.subtaskRepository.save(newSubtask);
+          }
+        }),
+      );
 
-    // 🔹 Identify and remove orphaned subtasks:
-    // Build an array of subtask IDs from the update DTO (for those subtasks that have an id)
-    const updatedSubtaskIds = subtasks
-      .filter((dto) => 'id' in dto && dto.id)
-      .map((dto) => {
-        if ('id' in dto) {
-          return dto.id;
-        }
-        return null;
-      })
-      .filter((id): id is string => id !== null);
+      // 🔹 Identify and remove orphaned subtasks:
+      // Build an array of subtask IDs from the update DTO (for those subtasks that have an id)
+      const updatedSubtaskIds = subtasks
+        .filter((dto) => 'id' in dto && dto.id)
+        .map((dto) => {
+          if ('id' in dto) {
+            return dto.id;
+          }
+          return null;
+        })
+        .filter((id): id is string => id !== null);
 
-    // Any subtask in the task that is not in updatedSubtaskIds should be removed.
-    const subtasksToRemove = task.subtasks.filter(
-      (existingSubtask) => !updatedSubtaskIds.includes(existingSubtask.id),
-    );
+      // Any subtask in the task that is not in updatedSubtaskIds should be removed.
+      const subtasksToRemove = task.subtasks.filter(
+        (existingSubtask) => !updatedSubtaskIds.includes(existingSubtask.id),
+      );
 
-    if (subtasksToRemove.length > 0) {
-      await this.subtaskRepository.remove(subtasksToRemove);
+      if (subtasksToRemove.length > 0) {
+        await this.subtaskRepository.remove(subtasksToRemove);
+      }
+
+      // 🔹 Update the task's subtasks with the newly updated/created subtasks.
+      task.subtasks = updatedSubtasks.filter(
+        (subtask): subtask is Subtask => subtask !== null,
+      );
     }
-
-    // 🔹 Update the task's subtasks with the newly updated/created subtasks.
-    task.subtasks = updatedSubtasks.filter(
-      (subtask): subtask is Subtask => subtask !== null,
-    );
 
     // 🔹 Save the updated task.
     const savedTask = await this.taskRepository.save(task);
