@@ -9,6 +9,8 @@ import { TasksModule } from './task-management/tasks/tasks.module';
 import { Task } from './task-management/tasks/entities/task.entity';
 import { Subtask } from './task-management/tasks/entities/subtask.entity';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -20,9 +22,10 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DBNAME,
-      entities: [Board, Status, Task, Subtask],
+      entities: [Board, Status, Task, Subtask, User],
       synchronize: true,
     }),
+    AuthModule,
     BoardsModule,
     TasksModule,
   ],
