@@ -16,19 +16,21 @@ export class BoardsService {
     private statusRepository: Repository<Status>,
   ) {}
 
-  async create(createBoardDto: CreateBoardDto): Promise<Board> {
+  async create(createBoardDto: CreateBoardDto, userId: string): Promise<Board> {
     const { name, statuses } = createBoardDto;
 
     const board = this.boardRepository.create({
       name,
-      statuses, // TypeORM will automatically save them due to `cascade: true`
+      statuses,
+      createdBy: userId,
     });
 
     return this.boardRepository.save(board);
   }
 
-  async findAll() {
+  async findAllAfterUser(userId: string): Promise<Board[]> {
     return await this.boardRepository.find({
+      where: { createdBy: userId },
       order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
     });
   }
@@ -40,7 +42,7 @@ export class BoardsService {
     });
   }
 
-  async update(id: string, updateBoardDto: UpdateBoardDto): Promise<Board> {
+  async update(id: string, updateBoardDto: UpdateBoardDto) {
     const { name, statuses } = updateBoardDto;
 
     // 1️⃣ Fetch the board with existing statuses
