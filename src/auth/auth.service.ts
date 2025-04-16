@@ -26,7 +26,7 @@ export class AuthService {
     const user = await this.usersService.findUserByEmail(email);
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Wrong email address');
     }
 
     const passMatch = await argon2.verify(user.password, pass);
@@ -35,6 +35,6 @@ export class AuthService {
       return user;
     }
 
-    throw new UnauthorizedException();
+    throw new UnauthorizedException('Wrong password');
   }
 }
