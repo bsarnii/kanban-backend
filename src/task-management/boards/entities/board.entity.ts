@@ -1,5 +1,10 @@
-/* eslint-disable prettier/prettier */
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+} from 'typeorm';
 import { Status } from './status.entity';
 import { Task } from 'src/task-management/tasks/entities/task.entity';
 
@@ -22,4 +27,7 @@ export class Board {
 
   @OneToMany(() => Task, (task) => task.board)
   tasks: Task[];
+
+  @Column()
+  createdBy: string; // User ID of the creator
 }
