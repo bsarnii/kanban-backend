@@ -11,10 +11,13 @@ import { Subtask } from './task-management/tasks/entities/subtask.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,
@@ -28,6 +31,7 @@ import { User } from './users/entities/user.entity';
     AuthModule,
     BoardsModule,
     TasksModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
