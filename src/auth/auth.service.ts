@@ -17,6 +17,9 @@ export class AuthService {
 
   async signIn(user: User): Promise<{ access_token: string }> {
     const payload = { userId: user.id, email: user.email };
+    if (!user.emailVerified) {
+      throw new UnauthorizedException('Email not verified');
+    }
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
