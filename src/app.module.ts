@@ -12,12 +12,14 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { MailModule } from './mail/mail.module';
+import { ThrottlerConfigModule } from './config/throttler-config/throttler-config.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ThrottlerConfigModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,

@@ -13,6 +13,7 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { UsersService } from './users.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { MailService } from 'src/mail/mail.service';
+import { minutes, Throttle } from '@nestjs/throttler';
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +26,7 @@ export class UsersController {
     return req.user;
   }
 
+  @Throttle({ default: { ttl: minutes(5), limit: 10 } })
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
@@ -34,12 +36,14 @@ export class UsersController {
     await this.mailService.sendVerificationEmail(user.email, user.name, token);
   }
 
+  @Throttle({ default: { ttl: minutes(5), limit: 10 } })
   @Public()
   @Post('resend-verification')
   async resendVerification(@Body('email') email: string) {
     return await this.usersService.resendVerificationEmail(email);
   }
 
+  @Throttle({ default: { ttl: minutes(5), limit: 10 } })
   @Public()
   @Get('verify')
   async verify(@Query('token') token: string): Promise<{ message: string }> {
