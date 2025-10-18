@@ -19,7 +19,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: true }) //TODO: Change it to false later
+  @Column({ default: false })
   emailVerified: boolean;
 
   @CreateDateColumn()
