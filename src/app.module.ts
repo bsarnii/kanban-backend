@@ -18,6 +18,7 @@ import { ThrottlerConfigModule } from './config/throttler-config/throttler-confi
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env.development', '.env.production'],
     }),
     ThrottlerConfigModule,
     TypeOrmModule.forRoot({
