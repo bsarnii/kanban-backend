@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { BoardsModule } from './task-management/boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Board } from './task-management/boards/entities/board.entity';
@@ -36,7 +34,5 @@ import { ThrottlerConfigModule } from './config/throttler-config/throttler-confi
     TasksModule,
     MailModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
