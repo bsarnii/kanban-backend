@@ -1,16 +1,13 @@
-import { DataSource } from 'typeorm';
-import { User } from '../users/entities/user.entity';
-import { Board } from '../task-management/boards/entities/board.entity';
-import { dbConfig } from '../config/typeorm.config';
+import { User } from '../../src/users/entities/user.entity';
+import { Board } from '../../src/task-management/boards/entities/board.entity';
 import { Status } from 'src/task-management/boards/entities/status.entity';
 import { Task } from 'src/task-management/tasks/entities/task.entity';
 import * as argon2 from 'argon2';
-
-const dataSource = new DataSource(dbConfig);
+import AppDataSource from '../../src/database/datasource';
 
 async function seed() {
-  await dataSource.initialize();
-  const queryRunner = dataSource.createQueryRunner();
+  await AppDataSource.initialize();
+  const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
   try {
@@ -172,7 +169,7 @@ async function seed() {
     process.exit(1);
   } finally {
     await queryRunner.release();
-    await dataSource.destroy();
+    await AppDataSource.destroy();
   }
 }
 

@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Status } from './status.entity';
-import { Task } from 'src/task-management/tasks/entities/task.entity';
+import { Task } from '../../tasks/entities/task.entity';
 
 @Entity()
 export class Board {
