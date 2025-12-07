@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { ThrottlerConfigModule } from './config/throttler-config/throttler-config.module';
-import { dbConfig } from './config/typeorm.config';
+import AppDataSource from './database/datasource';
 
 @Module({
   imports: [
@@ -15,9 +15,7 @@ import { dbConfig } from './config/typeorm.config';
       envFilePath: ['.env.development', '.env.production'],
     }),
     ThrottlerConfigModule,
-    TypeOrmModule.forRoot({
-      ...dbConfig
-    }),
+    TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
     BoardsModule,
     TasksModule,

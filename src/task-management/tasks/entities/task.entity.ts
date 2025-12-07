@@ -1,5 +1,5 @@
-import { Board } from 'src/task-management/boards/entities/board.entity';
-import { Status } from 'src/task-management/boards/entities/status.entity';
+import { Board } from '../../boards/entities/board.entity';
+import { Status } from '../../boards/entities/status.entity';
 import {
   Column,
   CreateDateColumn,
