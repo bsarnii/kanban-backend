@@ -22,7 +22,7 @@ import { ConfigService } from '@nestjs/config';
           from: '"Kanban Board Team" <kanbanboard@zohomail.eu>',
         },
         template: {
-          dir: __dirname + '/templates',
+          dir: __dirname + '/../../mail/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

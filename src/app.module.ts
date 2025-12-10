@@ -12,7 +12,7 @@ import AppDataSource from './database/datasource';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: ['.env.development', '.env.production', '.env'],
     }),
     ThrottlerConfigModule,
     TypeOrmModule.forRoot(AppDataSource.options),
