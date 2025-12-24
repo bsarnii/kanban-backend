@@ -1,0 +1,11 @@
+node_modules
+dist
+test
+.env
+.env.development
+.env.production
+.gitignore
+.prettierrc
+Dockerfile
+README.md
+docker-compose.yml
