@@ -4,6 +4,7 @@ import { Status } from 'src/task-management/boards/entities/status.entity';
 import { Task } from 'src/task-management/tasks/entities/task.entity';
 import * as argon2 from 'argon2';
 import AppDataSource from '../../src/database/datasource';
+import { BoardMember } from '../../src/task-management/board-member/entities/board-member.entity';
 
 async function seed() {
   await AppDataSource.initialize();
@@ -15,6 +16,7 @@ async function seed() {
     const boardRepo = queryRunner.manager.getRepository(Board);
     const statusRepo = queryRunner.manager.getRepository(Status);
     const taskRepo = queryRunner.manager.getRepository(Task);
+    const boardMemberRepo = queryRunner.manager.getRepository(BoardMember);
     // Find existing test user
     const existingUser = await userRepo.findOne({ where: { email: 'test@mykanbanapp.com' } });
     if (existingUser) {
@@ -59,6 +61,14 @@ async function seed() {
     ]);
     await boardRepo.save(boards);
     console.log('Default board created for test user');
+
+    const boardMembers = boardMemberRepo.create({
+      board: boards[0],
+      userId: testUser[0].id,
+      role: 'owner'
+    });
+    await boardMemberRepo.save(boardMembers);
+    console.log('Default board member created for the board');
 
     const statuses = statusRepo.create([
       { name: 'Todo', board: boards[0] },
