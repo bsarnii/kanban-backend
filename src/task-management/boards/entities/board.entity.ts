@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Status } from './status.entity';
 import { Task } from '../../tasks/entities/task.entity';
+import { BoardMember } from '../../board-member/entities/board-member.entity';
 
 @Entity()
 export class Board {
@@ -29,5 +30,10 @@ export class Board {
   tasks: Task[];
 
   @Column()
-  createdBy: string; // User ID of the creator
+  createdBy: string;
+
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.board, {
+    cascade: true
+  })
+  boardMembers: BoardMember[];
 }
