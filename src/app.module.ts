@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { ThrottlerConfigModule } from './config/throttler-config/throttler-config.module';
+import { BoardMemberModule } from './task-management/board-member/board-member.module';
 import AppDataSource from './database/datasource';
 
 @Module({
@@ -20,6 +21,7 @@ import AppDataSource from './database/datasource';
     BoardsModule,
     TasksModule,
     MailModule,
+    BoardMemberModule,
   ],
 })
 export class AppModule {}
