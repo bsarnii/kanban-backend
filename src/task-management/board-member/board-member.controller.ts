@@ -1,20 +1,23 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { BoardMemberService } from './board-member.service';
-import { CreateBoardMemberDto } from './dto/create-board-member.dto';
+import { AddBoardMemberDto } from './dto/add-board-member.dto';
 import { UpdateBoardMemberDto } from './dto/update-board-member.dto';
 
-@Controller('board-member')
+@Controller('boards/:boardId/board-members')
 export class BoardMemberController {
   constructor(private readonly boardMemberService: BoardMemberService) {}
 
   @Post()
-  create(@Body() createBoardMemberDto: CreateBoardMemberDto) {
-    return this.boardMemberService.create(createBoardMemberDto);
+  create(
+    @Param('boardId') boardId: string,
+    @Body() addBoardMemberDto: AddBoardMemberDto,
+  ) {
+    return this.boardMemberService.addByEmail(boardId, addBoardMemberDto);
   }
 
   @Get()
-  findAll() {
-    return this.boardMemberService.findAll();
+  findAllAfterBoardId(@Param('boardId') boardId: string) {
+    return this.boardMemberService.findAll(boardId);
   }
 
   @Get(':id')

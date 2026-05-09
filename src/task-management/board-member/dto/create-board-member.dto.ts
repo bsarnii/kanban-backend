@@ -1,9 +1,9 @@
 import { Board } from "src/task-management/boards/entities/board.entity";
 
 export class CreateBoardMemberDto {
-  userId: string;
+  userId!: string;
 
-  board: Board;
+  board!: Board;
 
   role = "owner";
 }
