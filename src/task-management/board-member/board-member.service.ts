@@ -7,10 +7,11 @@ import { CreateBoardMemberDto } from './dto/create-board-member.dto';
 import { AddBoardMemberDto } from './dto/add-board-member.dto';
 import { UpdateBoardMemberDto } from './dto/update-board-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { BoardMember } from './entities/board-member.entity';
 import { Board } from '../boards/entities/board.entity';
 import { User } from '../../users/entities/user.entity';
+import { BoardMemberResponseDto } from './dto/board-member-response.dto';
 
 @Injectable()
 export class BoardMemberService {
@@ -35,7 +36,7 @@ export class BoardMemberService {
     return this.boardMemberRepository.save(boardMember);
   }
 
-  async addByEmail(boardId: string, addBoardMemberDto: AddBoardMemberDto) {
+  async addByEmail(boardId: string, addBoardMemberDto: AddBoardMemberDto): Promise<BoardMemberResponseDto> {
     const { email, role } = addBoardMemberDto;
 
     const board = await this.boardRepository.findOne({
@@ -80,10 +81,26 @@ export class BoardMemberService {
     };
   }
 
-  findAll(boardId: string) {
-    return this.boardMemberRepository.find({
-      where: { board: { id: boardId } }
+  async findAll(boardId: string): Promise<BoardMemberResponseDto[]> {
+    const boardMembers = await this.boardMemberRepository.find({
+      where: { board: { id: boardId } },
     });
+
+    const userIds = [...new Set(boardMembers.map((boardMember) => boardMember.userId))];
+    const users = userIds.length
+      ? await this.userRepository.find({
+          where: { id: In(userIds) },
+          select: ['id', 'email'],
+        })
+      : [];
+
+    const emailByUserId = new Map(users.map((user) => [user.id, user.email]));
+
+    return boardMembers.map((boardMember) => ({
+      id: boardMember.id,
+      email: emailByUserId.get(boardMember.userId) ?? 'Unknown',
+      role: boardMember.role,
+    }));
   }
 
   findOne(id: number) {
