@@ -107,11 +107,35 @@ export class BoardMemberService {
     return `This action returns a #${id} boardMember`;
   }
 
-  update(id: number, updateBoardMemberDto: UpdateBoardMemberDto) {
-    return `This action updates a #${id} boardMember`;
+  async update(
+    boardId: string,
+    id: string,
+    updateBoardMemberDto: UpdateBoardMemberDto,
+  ): Promise<BoardMemberResponseDto> {
+    const boardMember = await this.boardMemberRepository.findOne({
+      where: { id, board: { id: boardId } },
+    });
+
+    if (!boardMember) {
+      throw new NotFoundException('Board member not found');
+    }
+
+    boardMember.role = updateBoardMemberDto.role;
+    const savedBoardMember = await this.boardMemberRepository.save(boardMember);
+
+    const user = await this.userRepository.findOne({
+      where: { id: savedBoardMember.userId },
+      select: ['email'],
+    });
+
+    return {
+      id: savedBoardMember.id,
+      email: user?.email ?? 'Unknown',
+      role: savedBoardMember.role,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} boardMember`;
+  async remove(id: string): Promise<null> {
+    return await this.boardMemberRepository.delete(id).then(() => null);
   }
 }

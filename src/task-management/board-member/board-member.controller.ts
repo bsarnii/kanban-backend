@@ -26,12 +26,16 @@ export class BoardMemberController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBoardMemberDto: UpdateBoardMemberDto) {
-    return this.boardMemberService.update(+id, updateBoardMemberDto);
+  update(
+    @Param('boardId') boardId: string,
+    @Param('id') id: string,
+    @Body() updateBoardMemberDto: UpdateBoardMemberDto,
+  ) {
+    return this.boardMemberService.update(boardId, id, updateBoardMemberDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.boardMemberService.remove(+id);
+    return this.boardMemberService.remove(id);
   }
 }
