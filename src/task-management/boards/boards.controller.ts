@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -14,6 +15,7 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { Request as Req } from 'express';
 import { JwtAuthTokenPayload } from 'src/auth/types/jwt-auth-token-payload.type';
 import { BoardWithMemberRoleResponseDto } from './dto/board-with-member-role-response.dto';
+import { BoardOwnerOnlyGuard } from './guards/board-owner-only.guard';
 
 @Controller('boards')
 export class BoardsController {
@@ -46,6 +48,7 @@ export class BoardsController {
   }
 
   @Patch(':id')
+  @UseGuards(BoardOwnerOnlyGuard)
   async update(
     @Param('id') id: string,
     @Body() updateBoardDto: UpdateBoardDto,
@@ -56,6 +59,7 @@ export class BoardsController {
   }
 
   @Delete(':id')
+  @UseGuards(BoardOwnerOnlyGuard)
   async remove(@Param('id') id: string) {
     return await this.boardsService.remove(id);
   }

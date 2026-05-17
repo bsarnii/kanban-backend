@@ -55,12 +55,7 @@ export class BoardMemberService {
       throw new NotFoundException('User not found');
     }
 
-    const existingMember = await this.boardMemberRepository.findOne({
-      where: {
-        board: { id: boardId },
-        userId: user.id,
-      },
-    });
+    const existingMember = await this.getBoardMemberByBoardIdAndUserId(boardId, user.id);
 
     if (existingMember) {
       throw new ConflictException('User is already a board member');
@@ -112,9 +107,7 @@ export class BoardMemberService {
     id: string,
     updateBoardMemberDto: UpdateBoardMemberDto,
   ): Promise<BoardMemberResponseDto> {
-    const boardMember = await this.boardMemberRepository.findOne({
-      where: { id, board: { id: boardId } },
-    });
+    const boardMember = await this.getBoardMemberByBoardIdAndUserId(boardId, id);
 
     if (!boardMember) {
       throw new NotFoundException('Board member not found');
@@ -137,5 +130,11 @@ export class BoardMemberService {
 
   async remove(id: string): Promise<null> {
     return await this.boardMemberRepository.delete(id).then(() => null);
+  }
+
+  async getBoardMemberByBoardIdAndUserId(boardId: string, userId: string): Promise<BoardMember | null> {
+    return await this.boardMemberRepository.findOne({
+      where: { board: { id: boardId }, userId },
+    });
   }
 }

@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardMember } from './entities/board-member.entity';
 import { Board } from '../boards/entities/board.entity';
 import { User } from '../../users/entities/user.entity';
+import { BoardOwnerGuard } from './guards/board-owner.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BoardMember, Board, User])],
   controllers: [BoardMemberController],
-  providers: [BoardMemberService],
+  providers: [BoardMemberService, BoardOwnerGuard],
   exports: [BoardMemberService]
 })
 export class BoardMemberModule {}

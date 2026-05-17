@@ -6,11 +6,12 @@ import { BoardsService } from './boards.service';
 import { BoardsController } from './boards.controller';
 import { BoardMember } from '../board-member/entities/board-member.entity';
 import { BoardMemberModule } from '../board-member/board-member.module';
+import { BoardOwnerOnlyGuard } from './guards/board-owner-only.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Board, Status, BoardMember]), BoardMemberModule], // Include both entities
   exports: [TypeOrmModule],
   controllers: [BoardsController],
-  providers: [BoardsService],
+  providers: [BoardsService, BoardOwnerOnlyGuard],
 })
 export class BoardsModule {}

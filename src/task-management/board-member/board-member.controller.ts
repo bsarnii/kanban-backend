@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { BoardMemberService } from './board-member.service';
 import { AddBoardMemberDto } from './dto/add-board-member.dto';
 import { UpdateBoardMemberDto } from './dto/update-board-member.dto';
+import { BoardOwnerGuard } from './guards/board-owner.guard';
 
 @Controller('boards/:boardId/board-members')
 export class BoardMemberController {
   constructor(private readonly boardMemberService: BoardMemberService) {}
 
   @Post()
+  @UseGuards(BoardOwnerGuard)
   create(
     @Param('boardId') boardId: string,
     @Body() addBoardMemberDto: AddBoardMemberDto,
@@ -26,6 +28,7 @@ export class BoardMemberController {
   }
 
   @Patch(':id')
+  @UseGuards(BoardOwnerGuard)
   update(
     @Param('boardId') boardId: string,
     @Param('id') id: string,
@@ -35,6 +38,7 @@ export class BoardMemberController {
   }
 
   @Delete(':id')
+  @UseGuards(BoardOwnerGuard)
   remove(@Param('id') id: string) {
     return this.boardMemberService.remove(id);
   }
