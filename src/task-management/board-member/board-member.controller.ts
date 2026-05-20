@@ -32,11 +32,10 @@ export class BoardMemberController {
   @Patch(':id')
   @UseGuards(BoardOwnerGuard)
   update(
-    @Param('boardId') boardId: string,
     @Param('id') id: string,
     @Body() updateBoardMemberDto: UpdateBoardMemberDto,
   ) {
-    return this.boardMemberService.update(boardId, id, updateBoardMemberDto);
+    return this.boardMemberService.update(id, updateBoardMemberDto);
   }
 
   @Delete(':id')

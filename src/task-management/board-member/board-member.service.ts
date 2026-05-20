@@ -103,11 +103,13 @@ export class BoardMemberService {
   }
 
   async update(
-    boardId: string,
     id: string,
     updateBoardMemberDto: UpdateBoardMemberDto,
   ): Promise<BoardMemberResponseDto> {
-    const boardMember = await this.getBoardMemberByBoardIdAndUserId(boardId, id);
+    const boardMember = await this.boardMemberRepository.findOne({
+      where: { id },
+    });
+
 
     if (!boardMember) {
       throw new NotFoundException('Board member not found');
