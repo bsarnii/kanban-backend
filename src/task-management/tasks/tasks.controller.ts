@@ -6,40 +6,54 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
+import { BoardOwnerOrEditorGuard } from './guards/board-owner-or-editor.guard';
+import { BoardMemberGuard } from '../guards/board-member.guard';
 
-@Controller()
+@Controller('boards/:boardId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post('tasks')
-  async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
-    return await this.tasksService.create(createTaskDto);
+  @Post()
+  @UseGuards(BoardOwnerOrEditorGuard)
+  async create(
+    @Param('boardId') boardId: string,
+    @Body() createTaskDto: CreateTaskDto
+  ): Promise<TaskResponseDto> {
+    return await this.tasksService.create(boardId, createTaskDto);
   }
 
-  @Get('boards/:boardId/tasks')
+  @Get()
+  @UseGuards(BoardMemberGuard)
   async findAllAfterBoardId(
     @Param('boardId') boardId: string,
   ): Promise<TaskResponseDto[]> {
     return await this.tasksService.findAllAfterBoardId(boardId);
   }
 
-  @Patch('tasks/:id')
-  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return await this.tasksService.update(id, updateTaskDto);
+  @Patch(':id')
+  @UseGuards(BoardOwnerOrEditorGuard)
+  async update(@Param('boardId') boardId: string, @Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    return await this.tasksService.update(boardId, id, updateTaskDto);
   }
 
-  @Delete('tasks/:id')
-  async remove(@Param('id') id: string) {
-    return await this.tasksService.remove(id);
+  @Delete(':id')
+  @UseGuards(BoardOwnerOrEditorGuard)
+  async remove(@Param('boardId') boardId: string, @Param('id') id: string) {
+    return await this.tasksService.remove(boardId, id);
   }
 
-  @Post('tasks/sort')
-  async sortTasks(@Body() taskIds: string[]): Promise<TaskResponseDto[]> {
-    return await this.tasksService.sortTasks(taskIds);
+  @Post('sort')
+  @UseGuards(BoardOwnerOrEditorGuard)
+  async sortTasks(
+    @Param('boardId') boardId: string,
+    @Body() taskIds: string[]
+  ): Promise<TaskResponseDto[]> {
+    return await this.tasksService.sortTasks(boardId, taskIds);
   }
 }
