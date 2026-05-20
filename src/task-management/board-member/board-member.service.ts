@@ -98,21 +98,18 @@ export class BoardMemberService {
     }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} boardMember`;
-  }
-
   async update(
+    boardId: string,
     id: string,
     updateBoardMemberDto: UpdateBoardMemberDto,
   ): Promise<BoardMemberResponseDto> {
     const boardMember = await this.boardMemberRepository.findOne({
-      where: { id },
+      where: { id, board: { id: boardId } },
     });
 
 
     if (!boardMember) {
-      throw new NotFoundException('Board member not found');
+      throw new NotFoundException(`Board member with ID ${id} not found in board ${boardId}.`);
     }
 
     boardMember.role = updateBoardMemberDto.role;
@@ -130,9 +127,17 @@ export class BoardMemberService {
     };
   }
 
-  async remove(id: string): Promise<null> {
-    return await this.boardMemberRepository.delete(id).then(() => null);
+async remove(boardId: string, id: string): Promise<null> {
+  const member = await this.boardMemberRepository.findOne({
+    where: { id, board: { id: boardId } },
+    relations: ['board'],
+  });
+  if (!member) {
+    throw new NotFoundException(`Board member with ID ${id} not found in board ${boardId}.`);
   }
+  await this.boardMemberRepository.delete(id);
+  return null;
+}
 
   async getBoardMemberByBoardIdAndUserId(boardId: string, userId: string): Promise<BoardMember | null> {
     return await this.boardMemberRepository.findOne({

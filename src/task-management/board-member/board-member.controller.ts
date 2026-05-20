@@ -24,23 +24,19 @@ export class BoardMemberController {
     return this.boardMemberService.findAll(boardId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.boardMemberService.findOne(+id);
-  }
-
   @Patch(':id')
   @UseGuards(BoardOwnerGuard)
   update(
+    @Param('boardId') boardId: string,
     @Param('id') id: string,
     @Body() updateBoardMemberDto: UpdateBoardMemberDto,
   ) {
-    return this.boardMemberService.update(id, updateBoardMemberDto);
+    return this.boardMemberService.update(boardId, id, updateBoardMemberDto);
   }
 
   @Delete(':id')
   @UseGuards(BoardOwnerGuard)
-  remove(@Param('id') id: string) {
-    return this.boardMemberService.remove(id);
+  remove(@Param('boardId') boardId: string, @Param('id') id: string) {
+    return this.boardMemberService.remove(boardId, id);
   }
 }
