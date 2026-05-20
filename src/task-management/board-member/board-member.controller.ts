@@ -3,8 +3,10 @@ import { BoardMemberService } from './board-member.service';
 import { AddBoardMemberDto } from './dto/add-board-member.dto';
 import { UpdateBoardMemberDto } from './dto/update-board-member.dto';
 import { BoardOwnerGuard } from './guards/board-owner.guard';
+import { BoardMemberGuard } from '../guards/board-member.guard';
 
 @Controller('boards/:boardId/board-members')
+@UseGuards(BoardMemberGuard)
 export class BoardMemberController {
   constructor(private readonly boardMemberService: BoardMemberService) {}
 

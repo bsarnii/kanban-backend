@@ -13,6 +13,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
 import { BoardOwnerOrEditorGuard } from './guards/board-owner-or-editor.guard';
+import { BoardMemberGuard } from '../guards/board-member.guard';
 
 @Controller('boards/:boardId/tasks')
 export class TasksController {
@@ -25,6 +26,7 @@ export class TasksController {
   }
 
   @Get()
+  @UseGuards(BoardMemberGuard)
   async findAllAfterBoardId(
     @Param('boardId') boardId: string,
   ): Promise<TaskResponseDto[]> {
@@ -32,6 +34,7 @@ export class TasksController {
   }
 
   @Patch(':id')
+  @UseGuards(BoardMemberGuard)
   @UseGuards(BoardOwnerOrEditorGuard)
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return await this.tasksService.update(id, updateTaskDto);
