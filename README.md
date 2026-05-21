@@ -66,7 +66,7 @@ npm run test:cov
 
 ## Project Structure
 
-```
+```text
 src/
 ├── auth/           # Authentication (JWT, guards, strategies)
 ├── config/         # Database & throttler configuration
