@@ -1,10 +1,10 @@
-import { User } from '../../src/users/entities/user.entity';
-import { Board } from '../../src/task-management/boards/entities/board.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Board } from 'src/task-management/boards/entities/board.entity';
 import { Status } from 'src/task-management/boards/entities/status.entity';
 import { Task } from 'src/task-management/tasks/entities/task.entity';
 import * as argon2 from 'argon2';
-import AppDataSource from '../../src/database/datasource';
-import { BoardMember } from '../../src/task-management/board-member/entities/board-member.entity';
+import AppDataSource from 'src/database/datasource';
+import { BoardMember } from 'src/task-management/board-member/entities/board-member.entity';
 
 async function seed() {
   await AppDataSource.initialize();

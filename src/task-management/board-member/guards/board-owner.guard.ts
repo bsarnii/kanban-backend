@@ -13,7 +13,7 @@ export class BoardOwnerGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest<Request>();
     const user = request.user as JwtAuthTokenPayload;
-    const boardId = request.params.boardId;
+    const boardId = request.params.boardId as string;
     return this.boardMemberService.getBoardMemberByBoardIdAndUserId(boardId, user.userId).then(boardMember => {
       if (!boardMember) {
         return false;
