@@ -13,7 +13,7 @@ export class BoardOwnerOnlyGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest<Request>();
     const user = request.user as JwtAuthTokenPayload;
-    const boardId = request.params.id;
+    const boardId = request.params.id as string;
     return this.boardService.findOne(boardId, user.userId).then(board => {
       if (!board) {
         return false;
