@@ -21,20 +21,23 @@ export class BoardsService {
     private boardMemberService: BoardMemberService,
   ) {}
 
-  async create(createBoardDto: CreateBoardDto, userId: string): Promise<BoardWithMemberRoleResponseDto> {
+  async create(
+    createBoardDto: CreateBoardDto,
+    userId: string,
+  ): Promise<BoardWithMemberRoleResponseDto> {
     const { name, statuses } = createBoardDto;
 
     const board = this.boardRepository.create({
       name,
       statuses,
-      createdBy: userId
+      createdBy: userId,
     });
 
     const savedBoard = await this.boardRepository.save(board);
     await this.boardMemberService.create({
       userId,
       board: savedBoard,
-      role: "owner"
+      role: 'owner',
     });
 
     const createdBoard = await this.boardRepository.findOne({
@@ -50,7 +53,9 @@ export class BoardsService {
     return mapBoardWithMemberRole(createdBoard, userId);
   }
 
-  async findAllWithBoardMemberRole(userId: string): Promise<BoardWithMemberRoleResponseDto[]> {
+  async findAllWithBoardMemberRole(
+    userId: string,
+  ): Promise<BoardWithMemberRoleResponseDto[]> {
     const boards = await this.boardRepository
       .createQueryBuilder('board')
       .leftJoinAndSelect('board.statuses', 'status')
@@ -63,7 +68,10 @@ export class BoardsService {
     return boards.map((board) => mapBoardWithMemberRole(board, userId));
   }
 
-  async findOne(id: string, userId: string): Promise<BoardWithMemberRoleResponseDto> {
+  async findOne(
+    id: string,
+    userId: string,
+  ): Promise<BoardWithMemberRoleResponseDto> {
     const board = await this.boardRepository.findOne({
       where: { id },
       order: { createdAt: 'ASC', statuses: { createdAt: 'ASC' } },
@@ -160,16 +168,17 @@ export class BoardsService {
   }
 }
 
-  function mapBoardWithMemberRole(
-    board: Board,
-    userId: string,
-  ): BoardWithMemberRoleResponseDto {
-    const boardWithBoardMembers = {
-      ...board,
-      boardMemberRole:
-        board.boardMembers?.find((member) => member.userId === userId)?.role ||
-        null,
-    };
-    const { boardMembers, ...boardWithoutMembers } = boardWithBoardMembers;
-    return boardWithoutMembers;
-  }
+function mapBoardWithMemberRole(
+  board: Board,
+  userId: string,
+): BoardWithMemberRoleResponseDto {
+  const boardWithBoardMembers = {
+    ...board,
+    boardMemberRole:
+      board.boardMembers?.find((member) => member.userId === userId)?.role ||
+      null,
+  };
+  const { boardMembers: _boardMembers, ...boardWithoutMembers } =
+    boardWithBoardMembers;
+  return boardWithoutMembers;
+}

@@ -35,7 +35,13 @@ export default tseslint.config(
         {
           "endOfLine": "auto"
         }
-      ]
+      ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "varsIgnorePattern": "^_"
+          }
+        ]
     },
   },
 );

@@ -1,1 +1,1 @@
-export type BoardMemberRole = 'owner' | 'editor' | 'viewer'
+export type BoardMemberRole = 'owner' | 'editor' | 'viewer';

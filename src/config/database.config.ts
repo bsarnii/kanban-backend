@@ -1,8 +1,8 @@
-import { config } from "dotenv";
-import { DataSourceOptions } from "typeorm";
+import { config } from 'dotenv';
+import { DataSourceOptions } from 'typeorm';
 
 config({
-  path: `.env.${process.env.NODE_ENV || 'development'}`
+  path: `.env.${process.env.NODE_ENV || 'development'}`,
 });
 
 export const typeormConfig: DataSourceOptions = {
@@ -13,8 +13,8 @@ export const typeormConfig: DataSourceOptions = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DBNAME,
   entities: [
-    __dirname + "/../**/entities/*.entity.{ts,js}",
-    __dirname + "/../**/**/entities/*.entity.{ts,js}",
+    __dirname + '/../**/entities/*.entity.{ts,js}',
+    __dirname + '/../**/**/entities/*.entity.{ts,js}',
   ],
   migrations: [__dirname + '/../../db/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',

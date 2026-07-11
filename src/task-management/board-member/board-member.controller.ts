@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { BoardMemberService } from './board-member.service';
 import { AddBoardMemberDto } from './dto/add-board-member.dto';
 import { UpdateBoardMemberDto } from './dto/update-board-member.dto';

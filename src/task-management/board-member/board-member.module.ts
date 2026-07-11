@@ -12,6 +12,6 @@ import { BoardMemberGuard } from '../guards/board-member.guard';
   imports: [TypeOrmModule.forFeature([BoardMember, Board, User])],
   controllers: [BoardMemberController],
   providers: [BoardMemberService, BoardOwnerGuard, BoardMemberGuard],
-  exports: [BoardMemberService]
+  exports: [BoardMemberService],
 })
 export class BoardMemberModule {}

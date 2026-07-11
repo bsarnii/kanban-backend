@@ -1,16 +1,24 @@
-import { Board } from '../../boards/entities/board.entity'
-import { BoardMemberRole } from '../../types/board-member-role.type'
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Board } from '../../boards/entities/board.entity';
+import { BoardMemberRole } from '../../types/board-member-role.type';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class BoardMember {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Column()
-  userId: string
+  userId: string;
 
-  @ManyToOne(() => Board, (board) => board.boardMembers, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Board, (board) => board.boardMembers, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'boardId' })
   board: Board;
 
