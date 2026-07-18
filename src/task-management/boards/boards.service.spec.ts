@@ -10,9 +10,9 @@ import { BoardMemberService } from '../board-member/board-member.service';
 describe('BoardsService', () => {
   let service: BoardsService;
 
-  let boardRepository: jest.Mocked<Repository<Board>>;
-  let statusRepository: jest.Mocked<Repository<Status>>;
-  let boardMemberService: jest.Mocked<BoardMemberService>;
+  let _boardRepository: jest.Mocked<Repository<Board>>;
+  let _statusRepository: jest.Mocked<Repository<Status>>;
+  let _boardMemberService: jest.Mocked<BoardMemberService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,9 +47,9 @@ describe('BoardsService', () => {
 
     service = module.get(BoardsService);
 
-    boardRepository = module.get(getRepositoryToken(Board));
-    statusRepository = module.get(getRepositoryToken(Status));
-    boardMemberService = module.get(BoardMemberService);
+    _boardRepository = module.get(getRepositoryToken(Board));
+    _statusRepository = module.get(getRepositoryToken(Status));
+    _boardMemberService = module.get(BoardMemberService);
   });
 
   afterEach(() => {
@@ -59,5 +59,4 @@ describe('BoardsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
 });

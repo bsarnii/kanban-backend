@@ -7,13 +7,12 @@ import { Status } from '../boards/entities/status.entity';
 import { Board } from '../boards/entities/board.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-
 describe('TasksService', () => {
   let service: TasksService;
-  let boardRepo: Repository<Board>;
-  let taskRepo: Repository<Task>;
-  let subtaskRepo: Repository<Subtask>;
-  let statusRepo: Repository<Status>;
+  let _boardRepo: Repository<Board>;
+  let _taskRepo: Repository<Task>;
+  let _subtaskRepo: Repository<Subtask>;
+  let _statusRepo: Repository<Status>;
 
   const mockBoardRepo = () => ({
     findOne: jest.fn(),
@@ -51,10 +50,10 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
-    boardRepo = module.get<Repository<Board>>(getRepositoryToken(Board));
-    taskRepo = module.get<Repository<Task>>(getRepositoryToken(Task));
-    subtaskRepo = module.get<Repository<Subtask>>(getRepositoryToken(Subtask));
-    statusRepo = module.get<Repository<Status>>(getRepositoryToken(Status));
+    _boardRepo = module.get<Repository<Board>>(getRepositoryToken(Board));
+    _taskRepo = module.get<Repository<Task>>(getRepositoryToken(Task));
+    _subtaskRepo = module.get<Repository<Subtask>>(getRepositoryToken(Subtask));
+    _statusRepo = module.get<Repository<Status>>(getRepositoryToken(Status));
   });
 
   it('should be defined', () => {

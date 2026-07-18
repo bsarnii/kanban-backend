@@ -8,9 +8,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('BoardMemberService', () => {
   let service: BoardMemberService;
-  let boardRepo: Repository<Board>;
-  let boardMemberRepo: Repository<BoardMember>;
-  let userRepo: Repository<User>;
+  let _boardRepo: Repository<Board>;
+  let _boardMemberRepo: Repository<BoardMember>;
+  let _userRepo: Repository<User>;
 
   const mockBoardRepo = () => ({
     findOne: jest.fn(),
@@ -34,15 +34,20 @@ describe('BoardMemberService', () => {
       providers: [
         BoardMemberService,
         { provide: getRepositoryToken(Board), useFactory: mockBoardRepo },
-        { provide: getRepositoryToken(BoardMember), useFactory: mockBoardMemberRepo },
+        {
+          provide: getRepositoryToken(BoardMember),
+          useFactory: mockBoardMemberRepo,
+        },
         { provide: getRepositoryToken(User), useFactory: mockUserRepo },
       ],
     }).compile();
 
     service = module.get<BoardMemberService>(BoardMemberService);
-    boardRepo = module.get<Repository<Board>>(getRepositoryToken(Board));
-    boardMemberRepo = module.get<Repository<BoardMember>>(getRepositoryToken(BoardMember));
-    userRepo = module.get<Repository<User>>(getRepositoryToken(User));
+    _boardRepo = module.get<Repository<Board>>(getRepositoryToken(Board));
+    _boardMemberRepo = module.get<Repository<BoardMember>>(
+      getRepositoryToken(BoardMember),
+    );
+    _userRepo = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
   it('should be defined', () => {
