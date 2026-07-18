@@ -23,7 +23,7 @@ export class TasksController {
   @UseGuards(BoardOwnerOrEditorGuard)
   async create(
     @Param('boardId') boardId: string,
-    @Body() createTaskDto: CreateTaskDto
+    @Body() createTaskDto: CreateTaskDto,
   ): Promise<TaskResponseDto> {
     return await this.tasksService.create(boardId, createTaskDto);
   }
@@ -38,7 +38,11 @@ export class TasksController {
 
   @Patch(':id')
   @UseGuards(BoardOwnerOrEditorGuard)
-  async update(@Param('boardId') boardId: string, @Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  async update(
+    @Param('boardId') boardId: string,
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ) {
     return await this.tasksService.update(boardId, id, updateTaskDto);
   }
 
@@ -52,7 +56,7 @@ export class TasksController {
   @UseGuards(BoardOwnerOrEditorGuard)
   async sortTasks(
     @Param('boardId') boardId: string,
-    @Body() taskIds: string[]
+    @Body() taskIds: string[],
   ): Promise<TaskResponseDto[]> {
     return await this.tasksService.sortTasks(boardId, taskIds);
   }

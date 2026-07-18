@@ -10,7 +10,10 @@ import { BoardOwnerOnlyGuard } from './guards/board-owner-only.guard';
 import { BoardMemberGuard } from '../guards/board-member.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board, Status, BoardMember]), BoardMemberModule], // Include both entities
+  imports: [
+    TypeOrmModule.forFeature([Board, Status, BoardMember]),
+    BoardMemberModule,
+  ], // Include both entities
   exports: [TypeOrmModule],
   controllers: [BoardsController],
   providers: [BoardsService, BoardOwnerOnlyGuard, BoardMemberGuard],

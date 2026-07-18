@@ -75,23 +75,26 @@ export class UsersService {
   }
 
   async verifyEmail(token: string) {
+    let payload: { sub: string };
+
     try {
-      const payload = await this.jwtService.verifyAsync<{ sub: string }>(
-        token,
-        {
-          secret: this.configService.get<string>('VERIFICATION_JWT_SECRET'),
-        },
-      );
-
-      const user = await this.findById(payload.sub);
-      if (!user) throw new NotFoundException('User not found');
-
-      if (user.emailVerified) return { message: 'Already verified' };
-
-      await this.markVerified(user.id);
-      return { message: 'Email verified successfully' };
+      payload = await this.jwtService.verifyAsync<{ sub: string }>(token, {
+        secret: this.configService.get<string>('VERIFICATION_JWT_SECRET'),
+      });
     } catch {
       throw new BadRequestException('Invalid or expired token');
     }
+
+    const user = await this.findById(payload.sub);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.emailVerified) {
+      return { message: 'Already verified' };
+    }
+
+    await this.markVerified(user.id);
+    return { message: 'Email verified successfully' };
   }
 }

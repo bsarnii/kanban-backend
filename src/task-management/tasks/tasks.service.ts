@@ -30,7 +30,10 @@ export class TasksService {
     private statusRepository: Repository<Status>,
   ) {}
 
-  async create(boardId: string, createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
+  async create(
+    boardId: string,
+    createTaskDto: CreateTaskDto,
+  ): Promise<TaskResponseDto> {
     const { name, description, statusId, subtasks } = createTaskDto;
 
     // 🔹 Check if board exists
@@ -109,7 +112,9 @@ export class TasksService {
       relations: ['subtasks'],
     });
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found in board ${boardId}.`);
+      throw new NotFoundException(
+        `Task with ID ${id} not found in board ${boardId}.`,
+      );
     }
 
     // 🔹 If statusId is provided, check if that status exists and update the task's status
@@ -187,17 +192,22 @@ export class TasksService {
     return plainToInstance(TaskResponseDto, savedTask);
   }
 
-  async remove(boardId:string, id: string) {
+  async remove(boardId: string, id: string) {
     const task = await this.taskRepository.findOne({
       where: { id, board: { id: boardId } },
     });
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found in board ${boardId}.`);
+      throw new NotFoundException(
+        `Task with ID ${id} not found in board ${boardId}.`,
+      );
     }
     return await this.taskRepository.remove(task);
   }
 
-  async sortTasks(boardId: string,taskIds: string[]): Promise<TaskResponseDto[]> {
+  async sortTasks(
+    boardId: string,
+    taskIds: string[],
+  ): Promise<TaskResponseDto[]> {
     //return new Promise(() => [] as TaskResponseDto[]);
     const tasks = await this.taskRepository.find({
       where: { id: In(taskIds), board: { id: boardId } },

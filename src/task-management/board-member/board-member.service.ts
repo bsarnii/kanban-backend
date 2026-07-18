@@ -30,13 +30,16 @@ export class BoardMemberService {
     const boardMember = this.boardMemberRepository.create({
       userId,
       board,
-      role: "owner"
+      role: 'owner',
     });
 
     return this.boardMemberRepository.save(boardMember);
   }
 
-  async addByEmail(boardId: string, addBoardMemberDto: AddBoardMemberDto): Promise<BoardMemberResponseDto> {
+  async addByEmail(
+    boardId: string,
+    addBoardMemberDto: AddBoardMemberDto,
+  ): Promise<BoardMemberResponseDto> {
     const { email, role } = addBoardMemberDto;
 
     const board = await this.boardRepository.findOne({
@@ -55,7 +58,10 @@ export class BoardMemberService {
       throw new NotFoundException('User not found');
     }
 
-    const existingMember = await this.getBoardMemberByBoardIdAndUserId(boardId, user.id);
+    const existingMember = await this.getBoardMemberByBoardIdAndUserId(
+      boardId,
+      user.id,
+    );
 
     if (existingMember) {
       throw new ConflictException('User is already a board member');
@@ -81,7 +87,9 @@ export class BoardMemberService {
       where: { board: { id: boardId } },
     });
 
-    const userIds = [...new Set(boardMembers.map((boardMember) => boardMember.userId))];
+    const userIds = [
+      ...new Set(boardMembers.map((boardMember) => boardMember.userId)),
+    ];
     const users = userIds.length
       ? await this.userRepository.find({
           where: { id: In(userIds) },
@@ -107,9 +115,10 @@ export class BoardMemberService {
       where: { id, board: { id: boardId } },
     });
 
-
     if (!boardMember) {
-      throw new NotFoundException(`Board member with ID ${id} not found in board ${boardId}.`);
+      throw new NotFoundException(
+        `Board member with ID ${id} not found in board ${boardId}.`,
+      );
     }
 
     boardMember.role = updateBoardMemberDto.role;
@@ -127,19 +136,24 @@ export class BoardMemberService {
     };
   }
 
-async remove(boardId: string, id: string): Promise<null> {
-  const member = await this.boardMemberRepository.findOne({
-    where: { id, board: { id: boardId } },
-    relations: ['board'],
-  });
-  if (!member) {
-    throw new NotFoundException(`Board member with ID ${id} not found in board ${boardId}.`);
+  async remove(boardId: string, id: string): Promise<null> {
+    const member = await this.boardMemberRepository.findOne({
+      where: { id, board: { id: boardId } },
+      relations: ['board'],
+    });
+    if (!member) {
+      throw new NotFoundException(
+        `Board member with ID ${id} not found in board ${boardId}.`,
+      );
+    }
+    await this.boardMemberRepository.delete(id);
+    return null;
   }
-  await this.boardMemberRepository.delete(id);
-  return null;
-}
 
-  async getBoardMemberByBoardIdAndUserId(boardId: string, userId: string): Promise<BoardMember | null> {
+  async getBoardMemberByBoardIdAndUserId(
+    boardId: string,
+    userId: string,
+  ): Promise<BoardMember | null> {
     return await this.boardMemberRepository.findOne({
       where: { board: { id: boardId }, userId },
     });

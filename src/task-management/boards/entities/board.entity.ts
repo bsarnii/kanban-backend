@@ -33,7 +33,7 @@ export class Board {
   createdBy: string;
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.board, {
-    cascade: true
+    cascade: true,
   })
   boardMembers: BoardMember[];
 }
