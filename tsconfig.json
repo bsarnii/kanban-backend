@@ -19,6 +19,6 @@
     "paths": {
       "src/*": ["./src/*"]
     },
-    "types": ["jest"]
+    "types": ["node", "jest"]
   }
 }
