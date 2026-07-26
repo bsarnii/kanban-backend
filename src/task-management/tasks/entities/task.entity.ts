@@ -14,20 +14,20 @@ import { Subtask } from './subtask.entity';
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  description: string;
+  description!: string;
 
   @ManyToOne(() => Board, (board) => board.tasks, {
     onDelete: 'CASCADE',
     eager: true,
   }) // Ensures tasks are deleted if board is deleted
   @JoinColumn({ name: 'boardId' }) // Explicitly defines the foreign key column
-  board: Board;
+  board!: Board;
 
   @ManyToOne(() => Status, {
     nullable: true,
@@ -41,11 +41,11 @@ export class Task {
     cascade: true,
     eager: true,
   })
-  subtasks: Subtask[];
+  subtasks!: Subtask[];
 
   @Column()
-  orderIndex: number;
+  orderIndex!: number;
 
   @CreateDateColumn()
-  public createdAt: Date;
+  public createdAt!: Date;
 }

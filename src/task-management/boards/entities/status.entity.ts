@@ -11,15 +11,15 @@ import { Board } from './board.entity';
 @Entity()
 export class Status {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @CreateDateColumn()
-  public createdAt: Date;
+  public createdAt!: Date;
 
   @ManyToOne(() => Board, (board) => board.statuses, { onDelete: 'CASCADE' }) // Ensures statuses are deleted if board is deleted
   @JoinColumn({ name: 'boardId' }) // Explicitly defines the foreign key column
-  board: Board;
+  board!: Board;
 }

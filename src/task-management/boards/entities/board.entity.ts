@@ -12,28 +12,28 @@ import { BoardMember } from '../../board-member/entities/board-member.entity';
 @Entity()
 export class Board {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @CreateDateColumn()
-  public createdAt: Date;
+  public createdAt!: Date;
 
   @OneToMany(() => Status, (status) => status.board, {
     cascade: true,
     eager: true,
   })
-  statuses: Status[];
+  statuses!: Status[];
 
   @OneToMany(() => Task, (task) => task.board)
-  tasks: Task[];
+  tasks!: Task[];
 
   @Column()
-  createdBy: string;
+  createdBy!: string;
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.board, {
     cascade: true,
   })
-  boardMembers: BoardMember[];
+  boardMembers!: BoardMember[];
 }

@@ -2,7 +2,7 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreateSubtaskDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsBoolean()
   @IsOptional()

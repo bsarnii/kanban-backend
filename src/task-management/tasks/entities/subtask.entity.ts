@@ -12,19 +12,19 @@ import { Exclude } from 'class-transformer';
 @Entity()
 export class Subtask {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  completed: boolean;
+  completed!: boolean;
 
   @CreateDateColumn()
-  public createdAt: Date;
+  public createdAt!: Date;
 
   @Exclude()
   @ManyToOne(() => Task, (task) => task.subtasks, { onDelete: 'CASCADE' }) // Ensures subtasks are deleted if task is deleted
   @JoinColumn({ name: 'taskId' }) // Explicitly defines the foreign key column
-  task: Task;
+  task!: Task;
 }

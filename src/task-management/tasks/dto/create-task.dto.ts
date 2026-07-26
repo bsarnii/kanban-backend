@@ -4,19 +4,19 @@ import { Type } from 'class-transformer';
 
 export class CreateTaskDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  description: string;
+  description!: string;
 
   @IsString()
-  boardId: string;
+  boardId!: string;
 
   @IsString()
-  statusId: string;
+  statusId!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateSubtaskDto)
-  subtasks: CreateSubtaskDto[];
+  subtasks!: CreateSubtaskDto[];
 }

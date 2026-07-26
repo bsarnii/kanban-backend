@@ -4,10 +4,10 @@ import { CreateStatusDto } from './create-status.dto';
 
 export class CreateBoardDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateStatusDto)
-  statuses: CreateStatusDto[];
+  statuses!: CreateStatusDto[];
 }

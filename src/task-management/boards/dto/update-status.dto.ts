@@ -6,5 +6,5 @@ export class UpdateStatusDto {
   id?: string;
 
   @IsString()
-  name: string;
+  name!: string;
 }

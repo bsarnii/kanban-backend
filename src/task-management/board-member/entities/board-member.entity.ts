@@ -11,17 +11,17 @@ import {
 @Entity()
 export class BoardMember {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @ManyToOne(() => Board, (board) => board.boardMembers, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'boardId' })
-  board: Board;
+  board!: Board;
 
   @Column()
-  role: BoardMemberRole;
+  role!: BoardMemberRole;
 }

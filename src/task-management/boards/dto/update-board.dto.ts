@@ -10,5 +10,5 @@ export class UpdateBoardDto extends PartialType(
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateStatusDto)
-  statuses: UpdateStatusDto[];
+  statuses!: UpdateStatusDto[];
 }
