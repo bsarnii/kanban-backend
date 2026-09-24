@@ -2,7 +2,7 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
-export const loggerConfig = WinstonModule.createLogger({
+const instance = winston.createLogger({
   transports: [
     new winston.transports.Console(),
 
@@ -18,4 +18,12 @@ export const loggerConfig = WinstonModule.createLogger({
       ),
     }),
   ],
+});
+
+instance.on('error', (error) => {
+  console.error('Winston transport error:', error);
+});
+
+export const loggerConfig = WinstonModule.createLogger({
+  instance,
 });
