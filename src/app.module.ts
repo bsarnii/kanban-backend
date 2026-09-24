@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { BoardsModule } from './task-management/boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './task-management/tasks/tasks.module';
@@ -24,4 +25,8 @@ import AppDataSource from './database/datasource';
     BoardMemberModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggingMiddleware).forRoutes('*');
+  }
+}
